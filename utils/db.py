@@ -93,17 +93,18 @@ class AEOAnalysis(Base):
     brand = relationship("BrandAnalysis", back_populates="aeo_analyses")
 
 
-# Global engine and session
+import streamlit as st
+
+# Global engine and session (kept for backward compatibility logic)
 engine = None
 Session = None
 
-
-def init_db():
+@st.cache_resource
+def get_engine():
     """
-    Initialize the database connection and create all tables.
+    Creates and caches the SQLAlchemy engine.
+    This ensures we don't reconnect to Supabase on every script rerun.
     """
-    global engine, Session
-    
     db_url = os.getenv("DATABASE_URL")
     if not db_url:
         raise ValueError("DATABASE_URL environment variable not set")
@@ -112,20 +113,31 @@ def init_db():
     if db_url and db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
 
-    # Create engine
-    engine = create_engine(db_url, echo=False)
+    # Create engine (Connection Pooling is handled by Supabase Transaction Pooler URL)
+    # pool_pre_ping=True helps with dropped connections
+    engine = create_engine(db_url, echo=False, pool_pre_ping=True)
     
-    # Create all tables
+    # Create tables (only does so if they don't exist)
     Base.metadata.create_all(engine)
     
-    # Create session factory
+    return engine
+
+def init_db():
+    """
+    Initialize the database connection.
+    Now just a wrapper around the cached get_engine().
+    """
+    global engine, Session
+    
+    engine = get_engine()
     Session = sessionmaker(bind=engine)
     
     return engine
 
-
 def get_session():
     """Get a new database session."""
+    # Ensure engine is initialized
+    global Session
     if Session is None:
         init_db()
     return Session()
