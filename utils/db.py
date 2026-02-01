@@ -34,7 +34,7 @@ class BrandAnalysis(Base):
 
 
 class Optimization(Base):
-    __tablename__ = 'optimizations'
+    __tablename__ = 'optimizations_v2'
     
     id = Column(Integer, primary_key=True)
     # FK Removed to prevent cross-Base mapper errors
@@ -51,12 +51,12 @@ class Optimization(Base):
 
 
 class MarketingAsset(Base):
-    __tablename__ = 'marketing_assets'
+    __tablename__ = 'marketing_assets_v2'
     
     id = Column(Integer, primary_key=True)
     # FK Removed to prevent cross-Base mapper errors
     brand_id = Column(Integer)
-    campaign_id = Column(Integer, ForeignKey('campaigns.id'), nullable=True)
+    campaign_id = Column(Integer, ForeignKey('campaigns_v2.id'), nullable=True)
     asset_type = Column(String)  # 'email', 'social', 'blog', 'ad_copy', 'social_card'
     content = Column(Text)
     persona_target = Column(String)
@@ -66,7 +66,7 @@ class MarketingAsset(Base):
 
 
 class Campaign(Base):
-    __tablename__ = 'campaigns'
+    __tablename__ = 'campaigns_v2'
     
     id = Column(Integer, primary_key=True)
     # FK Removed to prevent cross-Base mapper errors
@@ -78,7 +78,7 @@ class Campaign(Base):
 
 
 class AEOAnalysis(Base):
-    __tablename__ = 'aeo_analyses'
+    __tablename__ = 'aeo_analyses_v2'
     
     id = Column(Integer, primary_key=True)
     # FK Removed to prevent cross-Base mapper errors
