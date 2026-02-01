@@ -144,9 +144,19 @@ def setup_app_styling():
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #ffffff !important;
         color: #0f172a !important; /* Ink Black */
+        -webkit-text-fill-color: #0f172a !important; /* Fix for Safari/Chrome */
+        caret-color: #0f172a !important; /* Cursor color */
         border: 1px solid #cbd5e1 !important; /* Slate 300 */
         border-radius: 8px !important;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    }
+    
+    /* CRITICAL FIX: Ensure text inside Selectbox is visible */
+    .stSelectbox div[data-baseweb="select"] div {
+        color: #0f172a !important;
+    }
+    .stSelectbox div[data-baseweb="select"] span {
+        color: #0f172a !important;
     }
     
     /* Hover/Focus states for inputs */
