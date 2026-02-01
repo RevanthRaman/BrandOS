@@ -27,17 +27,33 @@ def setup_app_styling():
         --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     }
 
-    /* TYPOGRAPHY */
+    /* TYPOGRAPHY - Aggressive reset to ensure visibility in Cloud */
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif !important;
-        color: var(--text-main);
-        background-color: var(--bg-body);
     }
     
-    h1, h2, h3 {
+    /* Force main content text to be DARK, overriding any Cloud Dark Mode defaults */
+    .stApp, .stMarkdown, .stText, .stCodeBlock, .stCaption, .stJson, .stDataFrame, .stTable {
+        color: var(--text-main) !important;
+    }
+
+    h1, h2, h3, h4, h5, h6, .stHeading {
         font-family: 'Inter Tight', sans-serif !important;
         letter-spacing: -0.025em !important;
         color: var(--primary) !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Fix specific elements like expanders and labels */
+    .streamlit-expanderHeader {
+        color: var(--text-main) !important;
+        background-color: white !important;
+    }
+    label, .stLabel {
+        color: var(--text-muted) !important;
+    }
+    p, span, div {
+        color: inherit; /* Inherit the dark color from parent unless specified */
     }
     
     /* 1. APP CONTAINER & MAIN AREA (Platinum) */
