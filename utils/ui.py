@@ -156,26 +156,45 @@ def setup_app_styling():
     }
 
     /* 5. INPUTS & FORM ELEMENTS (High Readability) */
-    /* Force white background and dark text for all inputs */
-    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+    
+    /* Text Inputs & Text Areas */
+    .stTextInput input, .stTextArea textarea {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+        caret-color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    }
+
+    /* Selectbox - Aggressive Override for White Background */
+    .stSelectbox div[data-baseweb="select"] {
         background-color: #ffffff !important;
         color: #0f172a !important; /* Ink Black */
-        -webkit-text-fill-color: #0f172a !important; /* Fix for Safari/Chrome */
-        caret-color: #0f172a !important; /* Cursor color */
-        border: 1px solid #cbd5e1 !important; /* Slate 300 */
+        border: 1px solid #cbd5e1 !important;
         border-radius: 8px !important;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
     }
     
-    /* CRITICAL FIX: Ensure text inside Selectbox is visible */
-    .stSelectbox div[data-baseweb="select"] div {
+    /* Inner container fix (sometimes inherits transparency) */
+    .stSelectbox div[data-baseweb="select"] > div {
+        background-color: #ffffff !important;
         color: #0f172a !important;
     }
+
+    /* Selected Value Text */
     .stSelectbox div[data-baseweb="select"] span {
         color: #0f172a !important;
     }
     
-    /* Hover/Focus states for inputs */
+    /* Dropdown Arrow Icon */
+    .stSelectbox div[data-baseweb="select"] svg {
+        fill: #0f172a !important;
+        color: #0f172a !important;
+    }
+    
+    /* Hover/Focus states */
     .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox div[data-baseweb="select"]:focus-within {
         border-color: var(--accent) !important;
         box-shadow: 0 0 0 3px var(--accent-glow) !important;
