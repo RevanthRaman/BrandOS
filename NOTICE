@@ -2,9 +2,26 @@ BrandOS
 Copyright 2026 Revanth Raman
 
 This product includes software developed by Revanth Raman.
-GitHub: https://github.com/RevanthRaman
-Linkedin: https://www.linkedin.com/in/revanthraman
+Source Code: https://github.com/RevanthRaman
 
-**Attribution Notice:**
-If you use this software, you must retain the above copyright notice and this NOTICE file in your distribution.
-Credit must be given to "Revanth Raman" in any derived work or documentation.
+ATTRIBUTION REQUIREMENTS:
+
+1. REDISTRIBUTION:
+   If you distribute copies or modifications of this software, you must retain 
+   this NOTICE file, the LICENSE file, and all copyright notices.
+
+2. MANDATORY CREDIT:
+   Any derived work, distribution, or application utilizing this code 
+   MUST explicitly credit "Revanth Raman" as the original author.
+
+3. VISIBILITY:
+   The attribution must be prominent and easily visible to the end-user. 
+   Recommended locations include:
+   - The "About" screen or "Credits" page of the application.
+   - The footer of the website.
+   - The documentation and README of the derived project.
+
+4. AUTHENTIC IDENTITY:
+   Links to the original author's profile should be maintained where possible to ensure authenticity:
+   - GitHub: https://github.com/RevanthRaman
+   - LinkedIn: https://www.linkedin.com/in/revanthraman
