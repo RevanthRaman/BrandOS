@@ -37,8 +37,8 @@ class Optimization(Base):
     __tablename__ = 'optimizations'
     
     id = Column(Integer, primary_key=True)
-    # UPDATED FK: Points to new 'brands' table
-    brand_id = Column(Integer, ForeignKey('brands.id'))
+    # FK Removed to prevent cross-Base mapper errors
+    brand_id = Column(Integer)
     url = Column(String)
     original_content = Column(Text)
     optimized_content = Column(Text)
@@ -54,8 +54,8 @@ class MarketingAsset(Base):
     __tablename__ = 'marketing_assets'
     
     id = Column(Integer, primary_key=True)
-    # UPDATED FK: Points to new 'brands' table
-    brand_id = Column(Integer, ForeignKey('brands.id'))
+    # FK Removed to prevent cross-Base mapper errors
+    brand_id = Column(Integer)
     campaign_id = Column(Integer, ForeignKey('campaigns.id'), nullable=True)
     asset_type = Column(String)  # 'email', 'social', 'blog', 'ad_copy', 'social_card'
     content = Column(Text)
@@ -69,8 +69,8 @@ class Campaign(Base):
     __tablename__ = 'campaigns'
     
     id = Column(Integer, primary_key=True)
-    # UPDATED FK: Points to new 'brands' table
-    brand_id = Column(Integer, ForeignKey('brands.id'))
+    # FK Removed to prevent cross-Base mapper errors
+    brand_id = Column(Integer)
     name = Column(String, nullable=False)
     goal = Column(String)
     theme = Column(String)
@@ -81,8 +81,8 @@ class AEOAnalysis(Base):
     __tablename__ = 'aeo_analyses'
     
     id = Column(Integer, primary_key=True)
-    # UPDATED FK: Points to new 'brands' table
-    brand_id = Column(Integer, ForeignKey('brands.id'))
+    # FK Removed to prevent cross-Base mapper errors
+    brand_id = Column(Integer)
     query = Column(String, nullable=False)
     brand_url = Column(String)
     analysis_json = Column(Text)  # Full AEO analysis results
