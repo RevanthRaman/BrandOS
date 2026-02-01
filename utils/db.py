@@ -28,9 +28,9 @@ class BrandAnalysis(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
-    optimizations = relationship("Optimization", back_populates="brand")
-    aeo_analyses = relationship("AEOAnalysis", back_populates="brand")
-    assets = relationship("MarketingAsset", backref="brand")
+    # optimizations = relationship("Optimization", back_populates="brand")
+    # aeo_analyses = relationship("AEOAnalysis", back_populates="brand")
+    # assets = relationship("MarketingAsset", backref="brand")
 
 
 class Optimization(Base):
