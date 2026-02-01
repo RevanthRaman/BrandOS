@@ -13,3 +13,5 @@ brotli
 
 playwright
 nest_asyncio
+
+reportlab
