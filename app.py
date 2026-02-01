@@ -1439,7 +1439,7 @@ elif selection == "AEO Analysis":
         run_stability = st.checkbox("🔬 Deep Analysis (Multi-Sample)", value=False, help="Runs the query 3 times to ensure statistically significant results. Slightly slower but highly recommended for accuracy.")
         run_reputation = False
         if "Discovery" in aeo_mode:
-            run_reputation = st.checkbox("🛡️ Run Brand Reputation/Safety Audit", value=False, help="Checks for negative sentiment by running queries like 'Worst X', 'Scam', 'Security Issues'. Warning: Can use more credits.")
+            run_reputation = st.checkbox("🛡️ Run Brand Reputation/Safety Audit", value=True, help="Checks for negative sentiment by running queries like 'Worst X', 'Scam', 'Security Issues'. Warning: Can use more credits.")
         runs_count = 3 if run_stability else 1
 
     # --- 3. Run Analysis (Dual Mode) ---
