@@ -101,7 +101,7 @@ engine = None
 Session = None
 
 @st.cache_resource
-def get_engine():
+def get_engine(version="1.0"):
     """
     Creates and caches the SQLAlchemy engine.
     This ensures we don't reconnect to Supabase on every script rerun.
@@ -138,7 +138,8 @@ def init_db():
     """
     global engine, Session
     
-    engine = get_engine()
+    # Bumping version to 1.1 to invalidate cache and force table creation for _v2 schema
+    engine = get_engine(version="1.1")
     Session = sessionmaker(bind=engine)
     
     return engine
