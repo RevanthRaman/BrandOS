@@ -1,0 +1,15 @@
+streamlit
+google-generativeai
+google-genai
+sqlalchemy
+psycopg2-binary
+beautifulsoup4
+requests
+pandas
+plotly
+python-dotenv
+fake-useragent
+brotli
+
+playwright
+nest_asyncio
