@@ -200,9 +200,10 @@ def setup_app_styling():
         box-shadow: 0 0 0 3px var(--accent-glow) !important;
     }
 
-    /* Placeholders */
-    ::placeholder {
+    /* Placeholders - Specific Override to prevent inheriting black text */
+    input::placeholder, textarea::placeholder {
         color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important; /* Critical for Chrome/Safari */
         opacity: 1 !important;
     }
     
