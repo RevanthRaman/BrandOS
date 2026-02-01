@@ -31,4 +31,5 @@ venv/
 ENV/
 
 # Streamlit
-.streamlit/
+# Allow config.toml (Theme), Ignore secrets.toml (API Keys)
+.streamlit/secrets.toml
