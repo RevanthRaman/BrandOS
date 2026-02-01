@@ -37,7 +37,8 @@ class Optimization(Base):
     __tablename__ = 'optimizations'
     
     id = Column(Integer, primary_key=True)
-    brand_id = Column(Integer, ForeignKey('brand_analyses.id'))
+    # UPDATED FK: Points to new 'brands' table
+    brand_id = Column(Integer, ForeignKey('brands.id'))
     url = Column(String)
     original_content = Column(Text)
     optimized_content = Column(Text)
@@ -46,14 +47,15 @@ class Optimization(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
-    brand = relationship("BrandAnalysis", back_populates="optimizations")
+    # brand = relationship("BrandAnalysis", back_populates="optimizations")
 
 
 class MarketingAsset(Base):
     __tablename__ = 'marketing_assets'
     
     id = Column(Integer, primary_key=True)
-    brand_id = Column(Integer, ForeignKey('brand_analyses.id'))
+    # UPDATED FK: Points to new 'brands' table
+    brand_id = Column(Integer, ForeignKey('brands.id'))
     campaign_id = Column(Integer, ForeignKey('campaigns.id'), nullable=True)
     asset_type = Column(String)  # 'email', 'social', 'blog', 'ad_copy', 'social_card'
     content = Column(Text)
@@ -67,21 +69,20 @@ class Campaign(Base):
     __tablename__ = 'campaigns'
     
     id = Column(Integer, primary_key=True)
-    brand_id = Column(Integer, ForeignKey('brand_analyses.id'))
+    # UPDATED FK: Points to new 'brands' table
+    brand_id = Column(Integer, ForeignKey('brands.id'))
     name = Column(String, nullable=False)
     goal = Column(String)
     theme = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
-
-
-
 class AEOAnalysis(Base):
     __tablename__ = 'aeo_analyses'
     
     id = Column(Integer, primary_key=True)
-    brand_id = Column(Integer, ForeignKey('brand_analyses.id'))
+    # UPDATED FK: Points to new 'brands' table
+    brand_id = Column(Integer, ForeignKey('brands.id'))
     query = Column(String, nullable=False)
     brand_url = Column(String)
     analysis_json = Column(Text)  # Full AEO analysis results
@@ -90,7 +91,7 @@ class AEOAnalysis(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
-    brand = relationship("BrandAnalysis", back_populates="aeo_analyses")
+    # brand = relationship("BrandAnalysis", back_populates="aeo_analyses")
 
 
 import streamlit as st
@@ -120,6 +121,14 @@ def get_engine():
     # Create tables (only does so if they don't exist)
     Base.metadata.create_all(engine)
     
+    # CRITICAL FIX: Also create tables for the new brand schema (db_migration)
+    # This ensures 'brands', 'brand_urls', 'brand_analyses_new' are created
+    try:
+        from utils.db_migration import create_new_schema
+        create_new_schema(engine)
+    except Exception as e:
+        print(f"Error initializing new schema: {e}")
+
     return engine
 
 def init_db():
