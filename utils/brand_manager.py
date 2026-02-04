@@ -42,6 +42,7 @@ def extract_brand_name_from_url(url):
         return "Unknown Brand"
 
 
+
 def check_brand_exists(brand_name):
     """
     Check if a brand already exists in the database.
@@ -49,7 +50,7 @@ def check_brand_exists(brand_name):
     Returns:
         (brand_id, brand_data) if exists, (None, None) if not
     """
-    from utils.db_migration import Brand, get_session
+    from utils.db_migration import Brand
     
     session = get_session()
     
@@ -82,7 +83,7 @@ def get_brand_urls(brand_id):
     Returns:
         List of URL dicts with metadata
     """
-    from utils.db_migration import BrandURL, get_session
+    from utils.db_migration import BrandURL
     
     session = get_session()
     
@@ -122,7 +123,7 @@ def save_or_update_brand(brand_name, urls_data, analysis_data, design_tokens=Non
     Returns:
         brand_id
     """
-    from utils.db_migration import Brand, BrandURL, BrandAnalysisNew, get_session
+    from utils.db_migration import Brand, BrandURL, BrandAnalysisNew
     
     session = get_session()
     
@@ -269,7 +270,7 @@ def load_brand_data(brand_id):
     Returns:
         Dict with brand data in the format expected by the app
     """
-    from utils.db_migration import Brand, BrandURL, BrandAnalysisNew, get_session
+    from utils.db_migration import Brand, BrandAnalysisNew
     
     session = get_session()
     
@@ -293,7 +294,6 @@ def load_brand_data(brand_id):
         
         # Parse JSON fields
         unified_profile = json.loads(latest_analysis.unified_profile_json) if latest_analysis.unified_profile_json else {}
-        individual_analyses = json.loads(latest_analysis.individual_analyses_json) if latest_analysis.individual_analyses_json else {}
         design_tokens = json.loads(latest_analysis.design_tokens_json) if latest_analysis.design_tokens_json else {}
         knowledge_graph = json.loads(latest_analysis.knowledge_graph_json) if latest_analysis.knowledge_graph_json else {}
         competitor_analysis = json.loads(latest_analysis.competitor_analysis_json) if latest_analysis.competitor_analysis_json else {}
@@ -347,20 +347,25 @@ def load_brand_data(brand_id):
 def get_all_brands(limit=50):
     """
     Get all brands with metadata for dropdown selector.
+    Optimized to prevent N+1 queries.
     
     Returns:
         List of brand dicts with name, url_count, last_updated
     """
-    from utils.db_migration import Brand, get_session
-    from sqlalchemy import func
+    from utils.db_migration import Brand
     
     session = get_session()
     
     try:
-        brands = session.query(Brand).order_by(Brand.last_updated.desc()).limit(limit).all()
+        # Optimization: JOIN load urls so accessing brand.urls doesn't trigger new queries
+        # This fixes the N+1 query issue
+        brands = session.query(Brand).options(
+            joinedload(Brand.urls)
+        ).order_by(Brand.last_updated.desc()).limit(limit).all()
         
         result = []
         for brand in brands:
+            # This access is now in-memory thanks to joinedload
             url_count = len(brand.urls)
             
             # Calculate time ago
@@ -405,7 +410,8 @@ def delete_brand_related_data(brand_id):
     Delete all auxiliary data (AEO, Assets, Campaigns) associated with a brand ID.
     Uses utils.db session as these tables are in the old/mixed schema.
     """
-    from utils.db import AEOAnalysis, MarketingAsset, Campaign, Optimization, get_session as get_db_session
+    from utils.db import AEOAnalysis, MarketingAsset, Campaign, Optimization
+    from utils.db import get_session as get_db_session
     
     session = get_db_session()
     try:
@@ -433,7 +439,7 @@ def delete_brand(brand_id):
     # First delete related data in other tables
     delete_brand_related_data(brand_id)
 
-    from utils.db_migration import Brand, get_session
+    from utils.db_migration import Brand
     
     session = get_session()
     
@@ -457,7 +463,7 @@ def delete_brand_url(brand_id, url):
     """
     Delete a specific URL for a brand.
     """
-    from utils.db_migration import BrandURL, get_session
+    from utils.db_migration import BrandURL
     
     session = get_session()
     
@@ -483,9 +489,12 @@ def delete_brand_url(brand_id, url):
 
 # Helper function to add get_session to db_migration module
 def get_session():
-    """Get database session from migration module."""
-    from utils.db_migration import get_session as migration_get_session
-    return migration_get_session()
+    """
+    Get database session from utils.db.
+    This effectively manages connection pooling via st.cache_resource in db.py.
+    """
+    from utils.db import get_session as main_get_session
+    return main_get_session()
 
 
 def delete_aeo_analysis(aeo_id):
@@ -550,7 +559,7 @@ def delete_campaign(campaign_id):
 
 def rename_brand(brand_id, new_name):
     """Rename a brand."""
-    from utils.db_migration import Brand, get_session
+    from utils.db_migration import Brand
     session = get_session()
     try:
         brand = session.query(Brand).filter(Brand.id == brand_id).first()
@@ -572,42 +581,37 @@ def get_brand_stats(brand_id):
     """
     Get statistics for a brand (Url count, AEO reports, Assets).
     """
-    from utils.db_migration import Brand, get_session
-    from utils.db import AEOAnalysis, MarketingAsset, Campaign, get_session as get_db_session
+    from utils.db_migration import Brand
+    from utils.db import AEOAnalysis, MarketingAsset, Campaign
     
     stats = {"urls": 0, "aeo_reports": 0, "assets": 0, "campaigns": 0}
     
-    # 1. Get Core Stats (URLs)
+    # Use the same session manager for both checks if possible, or separate
     session = get_session()
     try:
         brand = session.query(Brand).filter(Brand.id == brand_id).first()
         if brand:
             stats["urls"] = len(brand.urls)
-    except:
-        pass
-    finally:
-        session.close()
+            
+        # Using the same session to query other tables as likely they drift into same DB structure
+        # but safely we can keep using the models
+        stats["aeo_reports"] = session.query(AEOAnalysis).filter(AEOAnalysis.brand_id == brand_id).count()
+        stats["assets"] = session.query(MarketingAsset).filter(MarketingAsset.brand_id == brand_id).count()
+        stats["campaigns"] = session.query(Campaign).filter(Campaign.brand_id == brand_id).count()
         
-    # 2. Get Related Stats (AEO, Assets)
-    session_db = get_db_session()
-    try:
-        stats["aeo_reports"] = session_db.query(AEOAnalysis).filter(AEOAnalysis.brand_id == brand_id).count()
-        stats["assets"] = session_db.query(MarketingAsset).filter(MarketingAsset.brand_id == brand_id).count()
-        stats["campaigns"] = session_db.query(Campaign).filter(Campaign.brand_id == brand_id).count()
     except Exception as e:
         # print(f"Error fetching stats: {e}")
         pass
     finally:
-        if session_db:
-            session_db.close()
+        session.close()
         
     return stats
 
 
 def get_brand_aeo_reports(brand_id):
     """Get list of AEO reports for a brand."""
-    from utils.db import AEOAnalysis, get_session as get_db_session
-    session = get_db_session()
+    from utils.db import AEOAnalysis
+    session = get_session()
     try:
         reports = session.query(AEOAnalysis).filter(AEOAnalysis.brand_id == brand_id).order_by(AEOAnalysis.created_at.desc()).all()
         return [{
@@ -623,8 +627,8 @@ def get_brand_aeo_reports(brand_id):
 
 def get_brand_assets(brand_id):
     """Get list of Assets for a brand."""
-    from utils.db import MarketingAsset, get_session as get_db_session
-    session = get_db_session()
+    from utils.db import MarketingAsset
+    session = get_session()
     try:
         assets = session.query(MarketingAsset).filter(MarketingAsset.brand_id == brand_id).order_by(MarketingAsset.created_at.desc()).limit(50).all()
         return [{
