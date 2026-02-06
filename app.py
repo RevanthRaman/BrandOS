@@ -141,11 +141,8 @@ def render_model_selector(key_suffix, default_model=ai_engine.GEMINI_3_PRO_PREVI
     )
 
 if selection == "Brand Analysis":
-    st.header("🔍 Brand Analysis & DNA (Gemini 3 Powered)")
+    st.header("🔍 Brand Analysis & DNA")
     st.caption("Deep-dive into your brand's digital soul.")
-    
-    # Simple Badge
-    st.caption("⚡ Powered by **Gemini 3 Pro** (Deep Reasoner) & **Flash** (High Speed)")
 
 
     
