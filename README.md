@@ -5,7 +5,7 @@
 [![Powered by Gemini 3 Pro](https://img.shields.io/badge/Powered%20by-Gemini%203%20Pro-8E44AD?style=for-the-badge)](https://deepmind.google/technologies/gemini/)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://brand-os.streamlit.app/)
 
-> **[🔴 Try It Live (Streamlit Cloud)](https://brand-os.streamlit.app/)** | **[📺 Watch the Demo Video](INSERT_YOUTUBE_LINK_HERE)**
+> **[🔴 Try It Live (Streamlit Cloud)](https://brand-os.streamlit.app/)** | **[📺 Watch the Demo Video](https://youtu.be/BCnZtiLxuyI?si=MilC-7Pctcdr2H3S)**
 
 ---
 
