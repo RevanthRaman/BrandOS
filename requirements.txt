@@ -1,5 +1,4 @@
 streamlit
-google-generativeai
 google-genai
 sqlalchemy
 psycopg2-binary
