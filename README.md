@@ -17,7 +17,7 @@ BrandOS is a **living intelligence layer** for your brand. We use the deep reaso
 
 #### ⚡ Powerhouse Features
 1.  **🧬 Decode Your Brand's Soul**: Don't just get data. Understand the *psychology* of your buyers. We extract your unique Voice, Archetype, and Core Values to build a strategy that feels human.
-2.  **🤖 Dominate the AI Era**: SEO is the past. We analyze how **ChatGPT, Perplexity, and Gemini** see you, giving you the playbook to become the "referenced authority" in AI answers.
+2.  **🤖 Dominate the AI Era**: SEO is the past. We analyze how **LLMs** see you, giving you the playbook to become the "referenced authority" in AI answers.
 3.  **🎨 Instant Visual Legacy**: Stop using generic stock photos. Brand Studio generates stunning, on-brand assets that align perfectly with your aesthetic identity.
 4.  **🚀 Content That Converts**: Feed generic copy into the Optimizer and watch it transform into high-converting gold, written specifically in *your* Brand Voice.
 
